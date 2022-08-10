@@ -2,6 +2,8 @@ name: LiteBungeeChat
 version: 1.0
 main: org.mooner.litebungeechat.LiteBungeeChat
 api-version: 1.18
+depend:
+  - BungeeAPI
 
 permissions:
   rank:

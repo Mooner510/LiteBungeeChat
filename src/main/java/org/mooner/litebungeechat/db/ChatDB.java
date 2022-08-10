@@ -46,12 +46,13 @@ public class ChatDB {
                 Connection c = DriverManager.getConnection(CONNECTION);
                 PreparedStatement s = c.prepareStatement(
                         "CREATE TABLE IF NOT EXISTS Chat (" +
-                                "id INTEGER NOT NULL UNIQUE," +
+                                "index INTEGER NOT NULL UNIQUE," +
+                                "id INTEGER NOT NULL," +
                                 "server TEXT NOT NULL," +
                                 "player TEXT NOT NULL," +
                                 "message TEXT NOT NULL," +
                                 "timestamp INTEGER NOT NULL," +
-                                "PRIMARY KEY(id))")
+                                "PRIMARY KEY(index AUTOINCREMENT))")
         ) {
             s.execute();
             LiteBungeeChat.plugin.getLogger().info("성공적으로 ChatDB 를 생성했습니다.");

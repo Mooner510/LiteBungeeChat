@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mooner.litebungeechat.db.ChatDB;
 import org.mooner.moonerbungeeapi.api.BungeeAPI;
 import org.mooner.moonerbungeeapi.api.Rank;
+import org.mooner.moonerbungeeapi.api.events.BungeeMessageEvent;
 
 import static org.mooner.moonerbungeeapi.api.BungeeAPI.sendBungeeMessage;
 import static org.mooner.moonerbungeeapi.api.Rank.chat;
@@ -37,7 +38,10 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
     public void onChat(AsyncPlayerChatEvent e) {
         e.setCancelled(true);
         Rank rank = BungeeAPI.getPlayerRank(e.getPlayer());
-        sendBungeeMessage(rank.getPrefix() + e.getPlayer().getName() + chat(" &e> ") + e.getMessage());
+        final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + e.getMessage();
+        sendBungeeMessage(s);
+        Bukkit.getConsoleSender().sendMessage(s);
+        BungeeAPI.sendForward(s);
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
     }
 }
