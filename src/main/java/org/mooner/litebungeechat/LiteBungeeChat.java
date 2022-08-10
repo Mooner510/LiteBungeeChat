@@ -36,6 +36,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
+        if(e.isCancelled()) return;
         e.setCancelled(true);
         Rank rank = BungeeAPI.getPlayerRank(e.getPlayer());
         final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + e.getMessage();
