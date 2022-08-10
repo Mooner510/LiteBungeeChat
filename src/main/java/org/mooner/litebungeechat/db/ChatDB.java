@@ -103,7 +103,7 @@ public class ChatDB {
         final long time = System.currentTimeMillis();
         try (
                 Connection c = DriverManager.getConnection(CONNECTION);
-                PreparedStatement s = c.prepareStatement("INSERT INTO Chat VALUES(?, ?, ?, ?, ?)")
+                PreparedStatement s = c.prepareStatement("INSERT INTO Chat (playerId, server, player, message, timestamp) VALUES(?, ?, ?, ?, ?)")
         ) {
             s.setLong(1, id);
             s.setString(2, BungeeAPI.getServerType(LiteBungeeChat.port).getTag());
