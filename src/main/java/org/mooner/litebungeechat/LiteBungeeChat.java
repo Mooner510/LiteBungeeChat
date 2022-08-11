@@ -8,10 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mooner.litebungeechat.db.ChatDB;
 import org.mooner.moonerbungeeapi.api.BungeeAPI;
 import org.mooner.moonerbungeeapi.api.Rank;
-import org.mooner.moonerbungeeapi.api.events.BungeeMessageEvent;
 
 import static org.mooner.moonerbungeeapi.api.BungeeAPI.sendBungeeMessage;
-import static org.mooner.moonerbungeeapi.api.Rank.chat;
 
 public final class LiteBungeeChat extends JavaPlugin implements Listener {
     public static LiteBungeeChat plugin;
