@@ -2,6 +2,7 @@ package org.mooner.litebungeechat;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +33,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e) {
         if(e.isCancelled()) return;
         e.setCancelled(true);
