@@ -71,7 +71,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
     public void onReceive(BungeeMessageEvent e) {
         if(!e.getChannel().equals("chat")) return;
         Bukkit.getOnlinePlayers().forEach(p -> {
-            if(!e.getPlayer().getUniqueId().equals(e.getPlayer().getUniqueId()) && KeyWordDB.init.check(p, e.getMessage()))
+            if(!e.getUUID().equals(p.getUniqueId()) && KeyWordDB.init.check(p, e.getMessage()))
                 p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
         });
     }
