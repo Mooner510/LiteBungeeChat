@@ -1,6 +1,8 @@
 package org.mooner.litebungeechat;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -9,7 +11,10 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mooner.moonerbungeeapi.api.BungeeAPI;
 import org.mooner.moonerbungeeapi.api.Rank;
+import org.mooner.moonerbungeeapi.api.events.BungeeMessageEvent;
 import org.mooner.moonerbungeeapi.db.ChatDB;
+import org.mooner.moonerbungeeapi.db.KeyWordDB;
+import org.mooner.moonerbungeeapi.db.PlayerDB;
 
 import static org.mooner.moonerbungeeapi.api.BungeeAPI.sendBungeeMessage;
 
@@ -36,6 +41,11 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         if(e.isCancelled()) return;
+        if(!e.getPlayer().isOp() && !PlayerDB.init.isTutorial(e.getPlayer())) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(ChatColor.RED + "먼저 튜토리얼을 끝내주세요!");
+            return;
+        }
         ChatDB.init.command(e.getPlayer(), e.getMessage());
     }
 
@@ -43,22 +53,26 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
     public void onChat(AsyncPlayerChatEvent e) {
         if(e.isCancelled()) return;
         e.setCancelled(true);
+        if(!e.getPlayer().isOp() && !PlayerDB.init.isTutorial(e.getPlayer())) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(ChatColor.RED + "먼저 튜토리얼을 끝내주세요!");
+            return;
+        }
         Rank rank = BungeeAPI.getPlayerRank(e.getPlayer());
         final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + e.getMessage();
         sendBungeeMessage(s);
         Bukkit.getConsoleSender().sendMessage(s);
-//        BungeeAPI.sendForward("chat", s);
+        BungeeAPI.sendMessage(e.getPlayer(), "chat", ChatColor.stripColor(s));
 //        BungeeAPI.sendForward("ALL", "chat", s);
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
     }
 
-//    @EventHandler
-//    public void onReceive(BungeeMessageEvent e) {
-//        this.getLogger().info(e.getChannel() + ": [" + e.getPlayer().getName() + "] " + e.getMessage());
-//        if(e.getChannel().equals("chat")) {
-//            if (KeyWordDB.init.check(e.getPlayer(), e.getMessage())) {
-//                e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-//            }
-//        }
-//    }
+    @EventHandler
+    public void onReceive(BungeeMessageEvent e) {
+        if(!e.getChannel().equals("chat")) return;
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            if(KeyWordDB.init.check(p, e.getMessage()))
+                p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+        });
+    }
 }
