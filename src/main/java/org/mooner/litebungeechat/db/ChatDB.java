@@ -49,7 +49,24 @@ public class ChatDB {
                                 "id INTEGER NOT NULL UNIQUE," +
                                 "playerId INTEGER NOT NULL," +
                                 "server TEXT NOT NULL," +
-                                "player TEXT NOT NULL," +
+                                "message TEXT NOT NULL," +
+                                "timestamp INTEGER NOT NULL," +
+                                "PRIMARY KEY(id AUTOINCREMENT))")
+        ) {
+            s.execute();
+            LiteBungeeChat.plugin.getLogger().info("성공적으로 ChatDB 를 생성했습니다.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try (
+                Connection c = DriverManager.getConnection(CONNECTION);
+                PreparedStatement s = c.prepareStatement(
+                        "CREATE TABLE IF NOT EXISTS Command (" +
+                                "id INTEGER NOT NULL UNIQUE," +
+                                "playerId INTEGER NOT NULL," +
+                                "server TEXT NOT NULL," +
+                                "prefix TEXT NOT NULL," +
                                 "message TEXT NOT NULL," +
                                 "timestamp INTEGER NOT NULL," +
                                 "PRIMARY KEY(id AUTOINCREMENT))")
@@ -103,12 +120,29 @@ public class ChatDB {
         final long time = System.currentTimeMillis();
         try (
                 Connection c = DriverManager.getConnection(CONNECTION);
-                PreparedStatement s = c.prepareStatement("INSERT INTO Chat (playerId, server, player, message, timestamp) VALUES(?, ?, ?, ?, ?)")
+                PreparedStatement s = c.prepareStatement("INSERT INTO Chat (playerId, server, message, timestamp) VALUES(?, ?, ?, ?)")
         ) {
             s.setLong(1, id);
             s.setString(2, BungeeAPI.getServerType(LiteBungeeChat.port).getTag());
-            s.setString(3, p.getUniqueId().toString());
-            s.setString(4, message);
+            s.setString(3, message);
+            s.setLong(4, time);
+            s.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void command(Player p, String cmd) {
+        final long id = getKey(p.getUniqueId());
+        final long time = System.currentTimeMillis();
+        try (
+                Connection c = DriverManager.getConnection(CONNECTION);
+                PreparedStatement s = c.prepareStatement("INSERT INTO Command (playerId, server, prefix, cmd, timestamp) VALUES(?, ?, ?, ?, ?)")
+        ) {
+            s.setLong(1, id);
+            s.setString(2, BungeeAPI.getServerType(LiteBungeeChat.port).getTag());
+            s.setString(3, cmd.split(" ")[0]);
+            s.setString(4, cmd);
             s.setLong(5, time);
             s.executeUpdate();
         } catch (SQLException e) {
