@@ -16,6 +16,8 @@ import org.mooner.moonerbungeeapi.db.ChatDB;
 import org.mooner.moonerbungeeapi.db.KeyWordDB;
 import org.mooner.moonerbungeeapi.db.PlayerDB;
 
+import java.util.Set;
+
 import static org.mooner.moonerbungeeapi.api.BungeeAPI.sendBungeeMessage;
 
 public final class LiteBungeeChat extends JavaPlugin implements Listener {
@@ -38,13 +40,17 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
+    private final Set<String> allow = Set.of("튜토리얼", "xbxhfldjf", "tutorial");
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         if(e.isCancelled()) return;
         if(!e.getPlayer().isOp() && !PlayerDB.init.isTutorial(e.getPlayer())) {
-            e.setCancelled(true);
-            e.getPlayer().sendMessage(ChatColor.RED + "먼저 튜토리얼을 끝내주세요!");
-            return;
+            if(!allow.contains(e.getMessage().substring(1).split(" ")[0])) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(ChatColor.RED + "먼저 튜토리얼을 끝내주세요!");
+                return;
+            }
         }
         ChatDB.init.command(e.getPlayer(), e.getMessage());
     }
