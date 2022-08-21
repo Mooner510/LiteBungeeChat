@@ -16,6 +16,8 @@ import org.mooner.moonerbungeeapi.db.ChatDB;
 import org.mooner.moonerbungeeapi.db.KeyWordDB;
 import org.mooner.moonerbungeeapi.db.PlayerDB;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Set;
 
 import static org.mooner.moonerbungeeapi.api.BungeeAPI.sendBungeeMessage;
@@ -68,6 +70,11 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
         final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + e.getMessage();
         sendBungeeMessage(s);
         Bukkit.getConsoleSender().sendMessage(s);
+        try {
+            new URL("http://localhost:8080/api/post/chat?player="+e.getPlayer().getName()+"&message="+e.getMessage()).openConnection().connect();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
         BungeeAPI.sendMessage(e.getPlayer(), "chat", ChatColor.stripColor(s));
 //        BungeeAPI.sendForward("ALL", "chat", s);
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
