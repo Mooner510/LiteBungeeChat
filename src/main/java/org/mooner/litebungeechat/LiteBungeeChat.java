@@ -70,13 +70,13 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
         final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + e.getMessage();
         sendBungeeMessage(s);
         Bukkit.getConsoleSender().sendMessage(s);
+        BungeeAPI.sendMessage(e.getPlayer(), "chat", ChatColor.stripColor(s));
+//        BungeeAPI.sendForward("ALL", "chat", s);
+        ChatDB.init.chat(e.getPlayer(), e.getMessage());
         try {
             new URL("http://localhost:8080/api/post/chat?player="+e.getPlayer().getName()+"&message="+e.getMessage()).openStream().close();
         } catch (IOException ignore) {
         }
-        BungeeAPI.sendMessage(e.getPlayer(), "chat", ChatColor.stripColor(s));
-//        BungeeAPI.sendForward("ALL", "chat", s);
-        ChatDB.init.chat(e.getPlayer(), e.getMessage());
     }
 
     @EventHandler
