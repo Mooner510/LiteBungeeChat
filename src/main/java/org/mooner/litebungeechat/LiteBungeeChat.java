@@ -18,6 +18,8 @@ import org.mooner.moonerbungeeapi.db.PlayerDB;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 import static org.mooner.moonerbungeeapi.api.BungeeAPI.sendBungeeMessage;
@@ -67,14 +69,15 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
             return;
         }
         Rank rank = BungeeAPI.getPlayerRank(e.getPlayer());
-        final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + e.getMessage();
+        final String message = e.getMessage();
+        final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + message;
         sendBungeeMessage(s);
         Bukkit.getConsoleSender().sendMessage(s);
         BungeeAPI.sendMessage(e.getPlayer(), "chat", ChatColor.stripColor(s));
 //        BungeeAPI.sendForward("ALL", "chat", s);
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
         try {
-            new URL("http://localhost:8080/api/post/chat?player="+e.getPlayer().getName()+"&message="+e.getMessage()).openStream().close();
+            new URL("http://localhost:8080/api/post/chat?player="+e.getPlayer().getName()+"&message="+ URLEncoder.encode(message, StandardCharsets.UTF_8)).openStream().close();
         } catch (IOException ignore) {
         }
     }
