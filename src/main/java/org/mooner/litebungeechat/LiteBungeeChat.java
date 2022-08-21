@@ -71,7 +71,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
         sendBungeeMessage(s);
         Bukkit.getConsoleSender().sendMessage(s);
         try {
-            new URL("http://localhost:8080/api/post/chat?player="+e.getPlayer().getName()+"&message="+e.getMessage()).openConnection().connect();
+            new URL("http://localhost:8080/api/post/chat?player="+e.getPlayer().getName()+"&message="+e.getMessage()).openStream().close();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
