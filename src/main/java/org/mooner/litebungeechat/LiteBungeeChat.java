@@ -77,7 +77,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
 //        BungeeAPI.sendForward("ALL", "chat", s);
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
         try {
-            new URL("http://localhost:8080/api/post/chat?player="+e.getPlayer().getName()+"&message="+ URLEncoder.encode(message, StandardCharsets.UTF_8)).openStream().close();
+            new URL("https://web.lite24.net/api/post/chat?player="+e.getPlayer().getName()+"&message="+ URLEncoder.encode(message, StandardCharsets.UTF_8)).openStream().close();
         } catch (IOException ignore) {
         }
     }
