@@ -68,6 +68,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
             e.getPlayer().sendMessage(ChatColor.RED + "먼저 튜토리얼을 끝내주세요!");
             return;
         }
+        long time = System.currentTimeMillis();
         Rank rank = BungeeAPI.getPlayerRank(e.getPlayer());
         final String message = e.getMessage();
         final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + message;
@@ -77,7 +78,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
 //        BungeeAPI.sendForward("ALL", "chat", s);
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
         try {
-            new URL("https://web.lite24.net/api/post/chat?player="+e.getPlayer().getName()+"&message="+ URLEncoder.encode(message, StandardCharsets.UTF_8)).openStream().close();
+            new URL("https://web.lite24.net/api/post/chat?player="+e.getPlayer().getName()+"&message="+ URLEncoder.encode(message, StandardCharsets.UTF_8)+"&time="+time).openStream().close();
         } catch (IOException ignore) {
         }
     }
