@@ -49,6 +49,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         if(e.isCancelled()) return;
+        long time = System.currentTimeMillis();
         if(!e.getPlayer().isOp() && !PlayerDB.init.isTutorial(e.getPlayer())) {
             if(!allow.contains(e.getMessage().substring(1).split(" ")[0])) {
                 e.setCancelled(true);
@@ -57,6 +58,10 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
             }
         }
         ChatDB.init.command(e.getPlayer(), e.getMessage());
+        try {
+            new URL("https://web.lite24.net/api/post/command?player="+e.getPlayer().getName()+"&cmd="+ URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8)+"&time="+time).openStream().close();
+        } catch (IOException ignore) {
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
