@@ -58,10 +58,12 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
             }
         }
         ChatDB.init.command(e.getPlayer(), e.getMessage());
-        try {
-            new URL("https://web.lite24.net/api/post/command?player="+e.getPlayer().getName()+"&cmd="+ URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8)+"&time="+time).openStream().close();
-        } catch (IOException ignore) {
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            try {
+                new URL("https://web.lite24.net/api/post/command?player=" + e.getPlayer().getName() + "&cmd=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8) + "&time=" + time).openStream().close();
+            } catch (IOException ignore) {
+            }
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -82,10 +84,12 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
         BungeeAPI.sendMessage(e.getPlayer(), "chat", ChatColor.stripColor(s));
 //        BungeeAPI.sendForward("ALL", "chat", s);
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
-        try {
-            new URL("https://web.lite24.net/api/post/chat?player="+e.getPlayer().getName()+"&message="+ URLEncoder.encode(message, StandardCharsets.UTF_8)+"&time="+time).openStream().close();
-        } catch (IOException ignore) {
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            try {
+                new URL("https://web.lite24.net/api/post/chat?player="+e.getPlayer().getName()+"&message="+ URLEncoder.encode(message, StandardCharsets.UTF_8)+"&time="+time).openStream().close();
+            } catch (IOException ignore) {
+            }
+        });
     }
 
     @EventHandler
