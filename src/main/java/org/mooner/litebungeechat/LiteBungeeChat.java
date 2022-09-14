@@ -81,7 +81,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
         final String s = rank.getPrefix() + e.getPlayer().getName() + ": " + message;
         sendBungeeMessage(s);
         Bukkit.getConsoleSender().sendMessage(s);
-        BungeeAPI.sendMessage(e.getPlayer(), "chat", ChatColor.stripColor(s));
+        BungeeAPI.sendMessage(e.getPlayer(), "chat", s);
 //        BungeeAPI.sendForward("ALL", "chat", s);
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
@@ -96,7 +96,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
     public void onReceive(BungeeMessageEvent e) {
         if(!e.getChannel().equals("chat")) return;
         Bukkit.getOnlinePlayers().forEach(p -> {
-            if(!e.getUUID().equals(p.getUniqueId()) && KeyWordDB.init.check(p, e.getMessage()))
+            if(!e.getUUID().equals(p.getUniqueId()) && KeyWordDB.init.check(p, e.getCleanMessage()))
                 p.playSound(p.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
         });
     }
