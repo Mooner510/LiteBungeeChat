@@ -82,7 +82,7 @@ public final class LiteBungeeChat extends JavaPlugin implements Listener {
         sendBungeeMessage(s);
         Bukkit.getConsoleSender().sendMessage(s);
         BungeeAPI.sendMessage(e.getPlayer(), "chat", s);
-//        BungeeAPI.sendForward("ALL", "chat", s);
+
         ChatDB.init.chat(e.getPlayer(), e.getMessage());
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
             try {
